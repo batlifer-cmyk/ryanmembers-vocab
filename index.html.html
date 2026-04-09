@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>라이언멤버스 영어입담비법서 어휘학습기 v2</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a18; min-height: 100vh; padding: 1.5rem 1rem 3rem; }
+  .app { max-width: 660px; margin: 0 auto; }
+
+  /* HEADER */
+  .header { display: flex; align-items: center; gap: 14px; margin-bottom: 2rem; }
+  .logo { width: 42px; height: 42px; background: #1a2a4a; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .logo svg { width: 22px; height: 22px; }
+  .title-block h1 { font-size: 17px; font-weight: 600; color: #1a1a18; letter-spacing: -0.2px; }
+  .title-block p { font-size: 12px; color: #888780; margin-top: 2px; }
+
+  /* TABS */
+  .tab-row { display: flex; gap: 6px; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e3dc; flex-wrap: wrap; }
+  .tab-btn { font-size: 13px; padding: 6px 16px; border: 1px solid #d3d1c7; border-radius: 20px; background: #fff; color: #888780; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .tab-btn.active { background: #1a2a4a; color: #c9a84c; border-color: #1a2a4a; font-weight: 500; }
+  .tab-btn:hover:not(.active) { background: #f1efe8; color: #1a1a18; }
+
+  /* TOPIC GRID */
+  .section-label { font-size: 11px; font-weight: 600; color: #b4b2a9; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px; margin-top: 1.5rem; }
+  .section-label:first-child { margin-top: 0; }
+  .book-group { margin-bottom: 1.5rem; }
+  .book-header { font-size: 12px; font-weight: 600; color: #c9a84c; background: #1a2a4a; display: inline-block; padding: 3px 10px; border-radius: 4px; margin-bottom: 10px; }
+  .topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 7px; }
+  .topic-card { padding: 10px 12px; border: 1px solid #d3d1c7; border-radius: 9px; cursor: pointer; transition: all 0.15s; background: #fff; }
+  .topic-card:hover { border-color: #888780; background: #faf9f6; }
+  .topic-card.selected { border-color: #1a2a4a; background: #edf1f8; }
+  .topic-card .tc-type { font-size: 10px; color: #888780; margin-bottom: 3px; }
+  .topic-card .tc-name { font-size: 13px; color: #1a1a18; font-weight: 500; line-height: 1.3; }
+  .topic-card .tc-count { font-size: 11px; color: #b4b2a9; margin-top: 4px; }
+  .topic-card.selected .tc-name { color: #1a2a4a; }
+
+  /* SELECT ALL ROW */
+  .select-actions { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+  .sel-btn { font-size: 12px; padding: 5px 12px; border: 1px solid #d3d1c7; border-radius: 6px; background: #fff; color: #5f5e5a; cursor: pointer; }
+  .sel-btn:hover { background: #f1efe8; }
+
+  /* START FOOTER */
+  .start-footer { position: sticky; bottom: 0; background: #f5f4f0; border-top: 1px solid #e5e3dc; padding: 1rem 0 0; display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
+  .sel-info { font-size: 13px; color: #888780; }
+  .sel-info strong { color: #1a1a18; font-weight: 600; }
+
+  /* PROGRESS */
+  .progress-wrap { margin-bottom: 1.25rem; }
+  .prog-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .prog-left { font-size: 13px; color: #5f5e5a; }
+  .prog-right { display: flex; gap: 8px; align-items: center; }
+  .score-pill { font-size: 12px; padding: 2px 10px; border-radius: 12px; background: #edf1f8; color: #1a2a4a; font-weight: 600; border: 1px solid #c5d0e8; }
+  .wrong-pill { font-size: 12px; padding: 2px 10px; border-radius: 12px; background: #fcebeb; color: #A32D2D; font-weight: 600; border: 1px solid #f0a0a0; }
+  .progress-bar { height: 5px; background: #e5e3dc; border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #1a2a4a; border-radius: 3px; transition: width 0.4s ease; }
+
+  /* CARD AREA */
+  .card-wrap { margin-bottom: 1.25rem; }
+
+  /* FLASHCARD */
+  .flashcard { background: #fff; border: 1px solid #d3d1c7; border-radius: 16px; padding: 2.25rem 1.75rem 1.75rem; min-height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; position: relative; transition: border-color 0.15s, box-shadow 0.15s; user-select: none; }
+  .flashcard:hover { border-color: #9a9894; box-shadow: 0 3px 14px rgba(26,42,74,0.08); }
+  .flashcard:active { transform: scale(0.995); }
+  .fc-book-tag { position: absolute; top: 13px; right: 14px; font-size: 10px; padding: 3px 9px; border-radius: 20px; background: #1a2a4a; color: #c9a84c; font-weight: 600; }
+  .fc-type-tag { position: absolute; top: 13px; left: 14px; font-size: 10px; padding: 3px 9px; border-radius: 20px; border: 1px solid #d3d1c7; color: #888780; }
+  .fc-topic-tag { position: absolute; bottom: 13px; left: 14px; font-size: 10px; color: #b4b2a9; }
+  .fc-front-word { font-size: 30px; font-weight: 700; color: #1a1a18; margin-bottom: 8px; letter-spacing: -0.5px; line-height: 1.2; }
+  .fc-front-hint { font-size: 13px; color: #b4b2a9; }
+  .fc-tap-hint { font-size: 12px; color: #c9c7bf; margin-top: 18px; }
+  .fc-back-meaning { font-size: 22px; font-weight: 600; color: #1a2a4a; margin-bottom: 14px; line-height: 1.4; }
+  .fc-back-example { font-size: 14px; color: #5f5e5a; line-height: 1.8; max-width: 400px; }
+  .fc-back-example .blank { font-weight: 700; color: #1a2a4a; border-bottom: 2px solid #1a2a4a; padding: 0 2px; }
+  .flashcard.flipped .fc-front { display: none; }
+  .flashcard.flipped .fc-back { display: flex; flex-direction: column; align-items: center; }
+  .fc-back { display: none; flex-direction: column; align-items: center; }
+
+  /* BLANK CARD */
+  .blank-card { background: #fff; border: 1px solid #d3d1c7; border-radius: 16px; padding: 1.75rem; }
+  .bc-meta { font-size: 11px; color: #b4b2a9; margin-bottom: 14px; }
+  .bc-meaning { font-size: 14px; color: #5f5e5a; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid #eee; }
+  .bc-meaning strong { color: #1a2a4a; }
+  .bc-sentence { font-size: 17px; line-height: 2; color: #1a1a18; margin-bottom: 1.25rem; }
+  .bc-blank { font-weight: 700; color: #1a2a4a; border-bottom: 3px solid #1a2a4a; padding: 0 6px; letter-spacing: 2px; }
+  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .choice-btn { font-size: 13px; padding: 10px 14px; border: 1px solid #d3d1c7; border-radius: 9px; background: #fff; color: #1a1a18; cursor: pointer; transition: all 0.15s; text-align: left; line-height: 1.35; }
+  .choice-btn:hover:not(.correct):not(.wrong):not(.disabled) { background: #f1efe8; border-color: #888780; }
+  .choice-btn.correct { background: #eaf3de; border-color: #639922; color: #2b5a0a; font-weight: 500; }
+  .choice-btn.wrong { background: #fcebeb; border-color: #E24B4A; color: #8a1f1f; }
+  .choice-btn.disabled { opacity: 0.5; cursor: default; }
+  .result-msg { font-size: 14px; margin-top: 14px; min-height: 20px; font-weight: 500; padding: 8px 12px; border-radius: 8px; }
+  .result-msg.ok { color: #2b5a0a; background: #eaf3de; }
+  .result-msg.ng { color: #8a1f1f; background: #fcebeb; }
+
+  /* BUTTONS */
+  .btn-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .btn { font-size: 14px; padding: 9px 20px; border: 1px solid #d3d1c7; border-radius: 9px; background: #fff; color: #1a1a18; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+  .btn:hover { background: #f1efe8; }
+  .btn:active { transform: scale(0.97); }
+  .btn.primary { background: #1a2a4a; color: #c9a84c; border-color: #1a2a4a; font-weight: 500; }
+  .btn.primary:hover { background: #243d6b; }
+  .btn.success { background: #eaf3de; color: #2b5a0a; border-color: #8bbf52; font-weight: 500; }
+  .btn.danger { background: #fcebeb; color: #8a1f1f; border-color: #e87070; font-weight: 500; }
+  .btn.ghost { color: #888780; border-color: #e0ded7; }
+  .btn.ghost:hover { color: #1a1a18; background: #f1efe8; }
+  .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  /* RESULT */
+  .result-card { background: #fff; border: 1px solid #d3d1c7; border-radius: 16px; padding: 2.5rem 1.75rem; text-align: center; }
+  .result-score { font-size: 44px; font-weight: 700; color: #1a2a4a; letter-spacing: -1px; }
+  .result-pct { font-size: 14px; color: #888780; margin-top: 6px; margin-bottom: 6px; }
+  .result-msg-big { font-size: 16px; color: #1a1a18; font-weight: 500; margin-bottom: 2rem; }
+  .result-stats { display: flex; gap: 12px; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
+  .stat-box { background: #f5f4f0; border-radius: 10px; padding: 12px 20px; text-align: center; min-width: 90px; }
+  .stat-num { font-size: 22px; font-weight: 700; color: #1a1a18; }
+  .stat-num.green { color: #2b5a0a; }
+  .stat-num.red { color: #8a1f1f; }
+  .stat-label { font-size: 11px; color: #888780; margin-top: 3px; }
+  .result-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+  /* DIVIDER */
+  hr { border: none; border-top: 1px solid #e5e3dc; margin: 1.5rem 0; }
+
+  /* REVIEW MODE BANNER */
+  .review-banner { background: #fcebeb; border: 1px solid #e87070; border-radius: 9px; padding: 10px 16px; font-size: 13px; color: #8a1f1f; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="logo">
+      <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11 2L3 6v10l8 4 8-4V6L11 2z" stroke="#c9a84c" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M11 2v20M3 6l8 4 8-4" stroke="#c9a84c" stroke-width="1.5" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="title-block">
+      <h1>라이언멤버스 어휘학습기</h1>
+      <p>영어입담비법서 1권 · 2권 · 3권 완전판</p>
+    </div>
+  </div>
+
+  <!-- HOME VIEW -->
+  <div id="home-view">
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="setMode('flash', this)">플래시카드</button>
+      <button class="tab-btn" onclick="setMode('blank', this)">예문 빈칸 맞히기</button>
+    </div>
+
+    <div class="select-actions">
+      <button class="sel-btn" onclick="selectAll()">전체 선택</button>
+      <button class="sel-btn" onclick="selectNone()">선택 해제</button>
+      <button class="sel-btn" onclick="selectBook(1)">1권만</button>
+      <button class="sel-btn" onclick="selectBook(2)">2권만</button>
+      <button class="sel-btn" onclick="selectBook(3)">3권만</button>
+    </div>
+
+    <div id="topic-list"></div>
+
+    <div class="start-footer">
+      <span class="sel-info" id="selected-info">토픽을 선택하세요</span>
+      <button class="btn primary" onclick="startStudy(false)">학습 시작 →</button>
+    </div>
+  </div>
+
+  <!-- STUDY VIEW -->
+  <div id="study-view" style="display:none;">
+    <div class="progress-wrap">
+      <div class="prog-top">
+        <span class="prog-left" id="prog-label">0 / 0</span>
+        <div class="prog-right">
+          <span class="score-pill" id="score-pill">맞음 0</span>
+          <span class="wrong-pill" id="wrong-pill">틀림 0</span>
+        </div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+    <div id="review-banner" style="display:none;" class="review-banner">
+      <svg viewBox="0 0 16 16" width="16" height="16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 5v4M8 11v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      틀린 문제 복습 모드 — 집중해서 다시 도전!
+    </div>
+    <div class="card-wrap" id="card-area"></div>
+    <div class="btn-row" id="btn-row"></div>
+  </div>
+
+  <!-- RESULT VIEW -->
+  <div id="result-view" style="display:none;"></div>
+
+</div>
+
+<script>
+const VOCAB = [
+  { book:1, topic:"날씨 · Weather", type:"단어·숙어", words:[
+    {w:"drizzle", m:"이슬비 / 보슬보슬 내리다", e:"It started to ___ as we left the restaurant.", t:"v"},
+    {w:"downpour", m:"폭우가 쏟아지다", e:"We got caught in a sudden ___.", t:"v"},
+    {w:"drenched", m:"흠뻑 젖은", e:"I was completely ___ by the time I got home.", t:"v"},
+    {w:"overcast", m:"구름이 뒤덮힌, 흐린", e:"The sky was ___ all morning — no sun at all.", t:"v"},
+    {w:"blizzard", m:"눈보라", e:"The city shut down because of the ___.", t:"v"},
+    {w:"muggy", m:"후덥지근한", e:"Summer in Busan is really hot and ___.", t:"v"},
+    {w:"scorching", m:"태울 듯이 더운", e:"It was a ___ day — over 38 degrees.", t:"v"},
+    {w:"scattered showers", m:"간간이 내리는 소나기", e:"The forecast says ___ in the afternoon.", t:"v"},
+    {w:"torrential rain", m:"폭우, 억수같이 내리는 비", e:"The roads flooded because of ___.", t:"v"},
+    {w:"damp", m:"축축한, 눅눅한", e:"The basement is cold and ___.", t:"v"},
+    {w:"blustery", m:"바람이 매우 거센", e:"It's a cold and ___ day outside.", t:"v"},
+    {w:"gale", m:"강풍", e:"A ___ warning has been issued for the coast.", t:"v"},
+    {w:"it's raining cats and dogs", m:"비가 세차게 퍼붓다", e:"Don't go out now — ___!", t:"i"},
+    {w:"every cloud has a silver lining", m:"나쁜 일 뒤엔 좋은 일이 온다", e:"I failed, but I learned a lot. ___.", t:"i"},
+    {w:"calm before the storm", m:"폭풍 전의 고요", e:"Everything seemed fine — it was just the ___.", t:"i"},
+    {w:"come rain or shine", m:"무슨 일이 있어도", e:"I'll be at your side ___.", t:"i"},
+    {w:"save it for a rainy day", m:"미래를 위해 아껴두다", e:"Don't spend it all — ___.", t:"i"},
+  ]},
+  { book:1, topic:"계절 · Seasons", type:"단어·숙어", words:[
+    {w:"blossom", m:"꽃이 피다 / 꽃", e:"Cherry trees ___ beautifully in spring.", t:"v"},
+    {w:"rejuvenating", m:"활기를 되찾게 하는", e:"A morning walk is really ___ in spring.", t:"v"},
+    {w:"vibrant", m:"활기찬, 생기가 넘치는", e:"The market was ___ with color and energy.", t:"v"},
+    {w:"heatwave", m:"열파, 폭염", e:"The country suffered a terrible ___ in August.", t:"v"},
+    {w:"wind chill", m:"체감 추위, 칼바람", e:"The ___ makes it feel 10 degrees colder.", t:"v"},
+    {w:"autumn leaves", m:"단풍", e:"The ___ in the mountains were absolutely stunning.", t:"v"},
+    {w:"high season", m:"성수기", e:"Hotel prices triple during ___.", t:"v"},
+    {w:"winter sports", m:"겨울 스포츠", e:"I love ___ — especially skiing and snowboarding.", t:"v"},
+    {w:"harvest", m:"수확, 수확하다", e:"Farmers have a big ___ every autumn.", t:"v"},
+    {w:"ladybug", m:"무당벌레", e:"I found a ___ on my sleeve this morning.", t:"v"},
+    {w:"fragrance", m:"향기, 향수", e:"The ___ of flowers filled the whole garden.", t:"v"},
+    {w:"below zero", m:"영하", e:"It was ___ last night — everything froze.", t:"v"},
+    {w:"spring fever", m:"춘곤증", e:"I have bad ___ — I can't stop yawning.", t:"v"},
+    {w:"steal someone's thunder", m:"남의 주목을 가로채다", e:"She announced her news at my party and ___ my ___.", t:"i"},
+    {w:"every cloud has a silver lining", m:"나쁜 일 뒤엔 좋은 일이", e:"It rained on our picnic, but ___.", t:"i"},
+  ]},
+  { book:1, topic:"음식 · Food & Taste", type:"단어·숙어", words:[
+    {w:"savory", m:"짭짤한, 고소한", e:"I prefer ___ snacks to sweet ones.", t:"v"},
+    {w:"pungent", m:"톡 쏘는 듯한", e:"This cheese has a really ___ smell.", t:"v"},
+    {w:"bland", m:"밋밋한, 싱거운", e:"The soup was too ___ — I added some hot sauce.", t:"v"},
+    {w:"nutritious", m:"영양가가 높은", e:"This salad is very ___ and filling.", t:"v"},
+    {w:"crispy", m:"바삭바삭한", e:"I love ___ fried chicken skin.", t:"v"},
+    {w:"chewy", m:"쫄깃쫄깃한", e:"Korean rice cakes are soft and ___.", t:"v"},
+    {w:"tender", m:"부드러운, 연한 (고기)", e:"The beef was so ___ it melted in my mouth.", t:"v"},
+    {w:"smoky", m:"훈제한 맛이 나는", e:"This BBQ sauce has a really ___ flavor.", t:"v"},
+    {w:"rich", m:"풍부한, 진한 맛의", e:"The chocolate cake was too ___ for me to finish.", t:"v"},
+    {w:"entrée", m:"주 요리", e:"I'll have the grilled salmon as my ___.", t:"v"},
+    {w:"silverware", m:"식기류 (은 포함)", e:"Could you bring some ___ for our table?", t:"v"},
+    {w:"dairy products", m:"유제품", e:"She avoids ___ because of lactose intolerance.", t:"v"},
+    {w:"bread and butter", m:"핵심, 요점", e:"Communication is the ___ of any good relationship.", t:"i"},
+    {w:"cup of tea", m:"내 취향이야", e:"Karaoke isn't really my ___.", t:"i"},
+    {w:"sell like hot cakes", m:"불티나게 팔리다", e:"Their new album is ___.", t:"i"},
+    {w:"spice things up", m:"활기를 불어넣다", e:"Let's ___ the office with some fun team activities.", t:"i"},
+    {w:"full of beans", m:"에너지가 넘치는", e:"The kids were ___ after the field trip.", t:"i"},
+  ]},
+  { book:1, topic:"식당 · Restaurant", type:"단어·표현", words:[
+    {w:"a la carte", m:"단품 메뉴", e:"We ordered ___ instead of the fixed set.", t:"v"},
+    {w:"sommelier", m:"와인 전문가", e:"Ask the ___ which wine pairs best with fish.", t:"v"},
+    {w:"vegan", m:"완전 채식주의자", e:"Do you have any ___ options on the menu?", t:"v"},
+    {w:"vegetarian", m:"채식주의자", e:"I've been ___ for three years.", t:"v"},
+    {w:"cutlery", m:"식기류", e:"Please bring extra ___ — there are eight of us.", t:"v"},
+    {w:"halal", m:"이슬람 율법에 맞게 도축된", e:"Is there a ___ restaurant near here?", t:"v"},
+    {w:"service charge", m:"서비스료", e:"A 10% ___ is included in the bill.", t:"v"},
+    {w:"make a booking", m:"예약하다", e:"I'll ___ for 7pm this Saturday.", t:"v"},
+    {w:"side dish", m:"반찬, 사이드 메뉴", e:"Korean meals always come with many ___s.", t:"v"},
+    {w:"platter", m:"모둠 요리, 큰 접시", e:"Let's order the sharing ___.", t:"v"},
+    {w:"stir fry", m:"볶다 (기름을 조금 넣고 재빨리)", e:"I'll ___ the vegetables with garlic and ginger.", t:"v"},
+    {w:"garnish", m:"고명, 고명을 얹다", e:"The chef added a mint ___ to the dessert.", t:"v"},
+    {w:"preheat", m:"예열하다", e:"___ the oven to 180 degrees.", t:"v"},
+    {w:"it's on the house", m:"서비스입니다!", e:"The manager says dessert is ___.", t:"i"},
+    {w:"go easy on", m:"살살 해줘 / 조금만 넣어줘", e:"___ the salt, please.", t:"i"},
+  ]},
+  { book:1, topic:"관계 · Relationships", type:"단어·숙어", words:[
+    {w:"sibling", m:"형제자매", e:"Do you have any ___s?", t:"v"},
+    {w:"acquaintance", m:"지인, 아는 사람", e:"He's not a close friend — just an ___.", t:"v"},
+    {w:"nuclear family", m:"핵가족", e:"The ___ is the most common unit in modern Korea.", t:"v"},
+    {w:"spouse", m:"배우자", e:"You're welcome to bring your ___ to the event.", t:"v"},
+    {w:"nurture", m:"양육하다, 육성하다", e:"Good parents ___ both talent and character.", t:"v"},
+    {w:"nephew", m:"남자 조카", e:"My ___ just started elementary school.", t:"v"},
+    {w:"niece", m:"여자 조카", e:"My ___ is obsessed with K-pop.", t:"v"},
+    {w:"kinship", m:"혈연관계", e:"___ ties are very important in Korean culture.", t:"v"},
+    {w:"low birthrate", m:"저출산율", e:"Korea has one of the world's lowest ___s.", t:"v"},
+    {w:"supporter", m:"지지자", e:"She's been my biggest ___ throughout everything.", t:"v"},
+    {w:"step-father", m:"의붓아버지", e:"My ___ is very kind and understanding.", t:"v"},
+    {w:"attachment", m:"애정, 유대감", e:"She has a strong ___ to her hometown.", t:"v"},
+    {w:"birds of a feather", m:"마음이 잘 맞는 친구들", e:"___ flock together — no wonder they get along.", t:"i"},
+    {w:"carry a secret to the grave", m:"절대 비밀을 지키다", e:"I'll ___— I promise I won't tell anyone.", t:"i"},
+    {w:"cross someone's path", m:"우연히 마주치다", e:"I crossed my old teacher's ___ at the grocery store.", t:"i"},
+  ]},
+  { book:1, topic:"성격 · Personality", type:"단어·표현", words:[
+    {w:"gregarious", m:"사교적인", e:"She's very ___ — always the life of the party.", t:"v"},
+    {w:"fickle", m:"변덕스러운", e:"He's so ___ — he changed his mind three times today.", t:"v"},
+    {w:"impulsive", m:"충동적인", e:"I made an ___ decision and quit my job.", t:"v"},
+    {w:"easygoing", m:"태평스러운, 여유로운", e:"My boss is really ___, so the office feels relaxed.", t:"v"},
+    {w:"stubborn", m:"고집이 센", e:"He's too ___ to ever admit he was wrong.", t:"v"},
+    {w:"upbeat", m:"긍정적인, 낙관적인", e:"She stays ___ even when things go wrong.", t:"v"},
+    {w:"streetwise", m:"세상 물정에 밝은", e:"Growing up in the city made him very ___.", t:"v"},
+    {w:"charismatic", m:"카리스마가 있는", e:"The new team leader is incredibly ___.", t:"v"},
+    {w:"introverted", m:"내향적인", e:"I'm quite ___ — I need time alone to recharge.", t:"v"},
+    {w:"extroverted", m:"외향적인", e:"She's very ___ and makes friends everywhere she goes.", t:"v"},
+    {w:"bossy", m:"잘난 척하는, 갑질하는", e:"Nobody likes working with someone who is ___.", t:"v"},
+    {w:"reliable", m:"믿음직한", e:"She's the most ___ person on the team.", t:"v"},
+    {w:"moody", m:"기분 변화가 심한", e:"He's been ___ lately — something must be bothering him.", t:"v"},
+    {w:"wishy-washy", m:"우유부단한", e:"Stop being ___ — just make a decision!", t:"v"},
+    {w:"affectionate", m:"다정한", e:"She's very ___ and always hugs her friends.", t:"v"},
+  ]},
+  { book:1, topic:"도시 · Hometown", type:"단어·숙어", words:[
+    {w:"outskirts", m:"변두리, 교외 지역", e:"They moved to the ___ to find cheaper housing.", t:"v"},
+    {w:"bustling", m:"활기차고 북적이는", e:"Haeundae is a ___ neighborhood in summer.", t:"v"},
+    {w:"commute", m:"통근하다", e:"It takes me about 40 minutes to ___ to work.", t:"v"},
+    {w:"tourist attractions", m:"관광 명소", e:"Busan has incredible ___.", t:"v"},
+    {w:"residential area", m:"주거 지역", e:"This is a quiet ___ — no clubs or bars.", t:"v"},
+    {w:"inner city", m:"도심 지역", e:"Rents in the ___ are extremely expensive.", t:"v"},
+    {w:"high-rise flats", m:"고층 아파트", e:"Most families in Seoul live in ___.", t:"v"},
+    {w:"public transport", m:"대중교통", e:"Busan has excellent ___.", t:"v"},
+    {w:"traffic jams", m:"교통 체증", e:"I hate getting stuck in ___ on the highway.", t:"v"},
+    {w:"cost of living", m:"물가, 생활비", e:"The ___ in Seoul is much higher than in Busan.", t:"v"},
+    {w:"medical tourism", m:"의료 관광", e:"Korea is a world leader in ___.", t:"v"},
+    {w:"boost tourism", m:"관광업을 증가시키다", e:"The festival will definitely ___.", t:"v"},
+    {w:"middle of nowhere", m:"아무것도 없는 곳", e:"The resort was in the ___ — total peace and quiet.", t:"i"},
+    {w:"paint the town red", m:"신나게 놀러 나가다", e:"It's our anniversary — let's ___!", t:"i"},
+    {w:"clean as a whistle", m:"아주 깨끗한", e:"The new apartment was ___.", t:"i"},
+  ]},
+  { book:1, topic:"축제 · Festivals", type:"단어·숙어", words:[
+    {w:"vendor", m:"노점상, 판매상", e:"We grabbed some tteokbokki from a street ___.", t:"v"},
+    {w:"parade", m:"퍼레이드, 행렬", e:"The ___ went down the main street for two hours.", t:"v"},
+    {w:"admission", m:"입장료", e:"What's the ___ fee for the festival?", t:"v"},
+    {w:"debut", m:"데뷔", e:"The young band made their ___ at the festival.", t:"v"},
+    {w:"be held", m:"개최되다", e:"The Busan film festival ___ every October.", t:"v"},
+    {w:"ceremony", m:"의식, 행사", e:"The opening ___ was absolutely spectacular.", t:"v"},
+    {w:"decoration", m:"장식", e:"The street ___s were colorful and beautiful.", t:"v"},
+    {w:"fireworks", m:"불꽃놀이", e:"The ___ display lasted twenty minutes.", t:"v"},
+    {w:"street performer", m:"거리 공연가", e:"A ___ was juggling fire in the square.", t:"v"},
+    {w:"cherry blossom festival", m:"벚꽃 축제", e:"The ___ in Gyeongju attracts thousands of visitors.", t:"v"},
+    {w:"out of town", m:"동네를 벗어나다", e:"I'll be ___ this weekend — road trip!", t:"i"},
+    {w:"make yourself at home", m:"편안하게 있어", e:"Come in and ___ — I'll put the kettle on.", t:"i"},
+    {w:"paint the town red", m:"신나게 돌아다니며 놀다", e:"It's Friday — let's ___!", t:"i"},
+    {w:"sit back and relax", m:"편안하게 즐기다", e:"Just ___ — I'll handle everything.", t:"i"},
+  ]},
+
+  { book:2, topic:"취미 · Hobbies", type:"단어·숙어", words:[
+    {w:"hang out", m:"어울려 놀다", e:"Do you want to ___ this weekend?", t:"v"},
+    {w:"work out", m:"운동하다", e:"She ___s at the gym every morning.", t:"v"},
+    {w:"voluntary work", m:"자원봉사", e:"I do ___ at a local food bank on weekends.", t:"v"},
+    {w:"keeping fit", m:"건강 유지하기", e:"___ gets harder as you get older.", t:"v"},
+    {w:"arts and crafts", m:"예술과 공예", e:"She teaches ___ at a community center.", t:"v"},
+    {w:"surf the internet", m:"인터넷 서핑하다", e:"I spent all evening ___ing.", t:"v"},
+    {w:"play a sport", m:"스포츠를 하다", e:"It's important for kids to ___ regularly.", t:"v"},
+    {w:"musical instrument", m:"악기", e:"Learning a ___ improves concentration.", t:"v"},
+    {w:"gardening", m:"정원 가꾸기", e:"___ is a great way to relax on weekends.", t:"v"},
+    {w:"collecting", m:"수집하기", e:"His hobby is ___ vintage cameras.", t:"v"},
+    {w:"fishing", m:"낚시", e:"My dad loves ___ at the river on Sunday mornings.", t:"v"},
+    {w:"grab some munchies", m:"간식을 챙기다", e:"Let's ___ before the movie starts.", t:"i"},
+    {w:"low key night", m:"조용히 집에서 쉬는 날", e:"I'm having a ___ — just Netflix and tea.", t:"i"},
+    {w:"buy a lemon", m:"불량품을 속아 사다", e:"I think I ___ — the laptop broke after two days.", t:"i"},
+    {w:"barrel of laughs", m:"매우 재미있는 사람", e:"Invite Jin — he's such a ___.", t:"i"},
+  ]},
+  { book:2, topic:"쇼핑 · Shopping", type:"단어·숙어", words:[
+    {w:"clearance sale", m:"재고 할인 행사", e:"I found this jacket at a ___.", t:"v"},
+    {w:"impulse purchase", m:"충동구매", e:"That bag was a total ___. I didn't even need it.", t:"v"},
+    {w:"pricey", m:"비싼", e:"The hotel was wonderful but a bit ___.", t:"v"},
+    {w:"on sale", m:"할인 중", e:"These sneakers are ___ — 30% off!", t:"v"},
+    {w:"buy one get one free", m:"원 플러스 원", e:"The supermarket has a ___ deal on coffee.", t:"v"},
+    {w:"pay in cash", m:"현금 결제하다", e:"Some small stores only let you ___.", t:"v"},
+    {w:"change", m:"잔돈", e:"Do you have ___ for a 50,000 won bill?", t:"v"},
+    {w:"fishmonger", m:"생선 장수", e:"The ___ at the market was very friendly.", t:"v"},
+    {w:"give away", m:"증정하다, 기부하다", e:"They are ___ free samples at the entrance.", t:"v"},
+    {w:"window shopping", m:"아이쇼핑", e:"I was just ___ — I didn't buy anything.", t:"v"},
+    {w:"salesman", m:"판매원", e:"The ___ was very pushy and persuasive.", t:"v"},
+    {w:"shopping spree", m:"마음껏 쇼핑하기", e:"I went on a ___ after getting my bonus.", t:"i"},
+    {w:"it costs a fortune", m:"엄청 비싸다", e:"That handbag ___! Way out of my budget.", t:"i"},
+    {w:"good value for money", m:"가성비가 좋다", e:"This restaurant is excellent — really ___.", t:"i"},
+    {w:"I can't afford it", m:"감당할 수 없다, 살 돈이 없다", e:"I love that jacket but ___.", t:"i"},
+  ]},
+  { book:2, topic:"직장 · Work", type:"단어·숙어", words:[
+    {w:"colleagues", m:"직장 동료", e:"My ___ are all very supportive and fun.", t:"v"},
+    {w:"promotion", m:"승진", e:"She worked hard and got a ___ after one year.", t:"v"},
+    {w:"commute", m:"통근하다", e:"My daily ___ takes about 45 minutes.", t:"v"},
+    {w:"self-employed", m:"자영업의, 프리랜서", e:"I've been ___ since I left the company.", t:"v"},
+    {w:"lay off", m:"구조조정하다", e:"The company ___ 200 workers last quarter.", t:"v"},
+    {w:"resign", m:"사임하다", e:"She decided to ___ after 10 years.", t:"v"},
+    {w:"shift", m:"교대 근무, 근무 시간", e:"I work the night ___ this week.", t:"v"},
+    {w:"desk job", m:"사무직", e:"After years of travel, I finally got a ___.", t:"v"},
+    {w:"raise", m:"임금 인상", e:"I'm going to ask my boss for a ___.", t:"v"},
+    {w:"supervisor", m:"감독관, 상사", e:"My ___ gave me excellent feedback.", t:"v"},
+    {w:"appointment", m:"중요한 약속", e:"I have a doctor's ___ at 3pm.", t:"v"},
+    {w:"think outside the box", m:"창의적으로 생각하다", e:"We need to ___ for this new campaign.", t:"i"},
+    {w:"have a lot on my plate", m:"일이 너무 많다", e:"I can't take on more right now — ___.", t:"i"},
+    {w:"learn the ropes", m:"일을 익히다, 요령을 배우다", e:"It took me a month to ___ at the new office.", t:"i"},
+    {w:"people person", m:"사교성이 좋은 사람", e:"You should try sales — you're such a ___.", t:"i"},
+  ]},
+  { book:2, topic:"비즈니스 · Business", type:"단어·숙어", words:[
+    {w:"collaboration", m:"협력 (공동 목표)", e:"This project requires close ___ between departments.", t:"v"},
+    {w:"cooperation", m:"협력 (목표가 다를 수 있음)", e:"International ___ is key to solving climate change.", t:"v"},
+    {w:"vacancy", m:"결원, 공석", e:"There's a ___ in the marketing department.", t:"v"},
+    {w:"workload", m:"업무량", e:"My ___ has tripled since the merger.", t:"v"},
+    {w:"work experience", m:"근무 경력", e:"Strong ___ is essential for this role.", t:"v"},
+    {w:"job description", m:"직무 설명서", e:"Read the ___ carefully before applying.", t:"v"},
+    {w:"tenure", m:"정규직, 종신 재직권", e:"She was granted ___ after her fifth year.", t:"v"},
+    {w:"prospects", m:"전망, 성공할 가능성", e:"The career ___ in tech are excellent.", t:"v"},
+    {w:"cash cow", m:"돈이 되는 상품이나 서비스", e:"Their subscription plan is a real ___.", t:"i"},
+    {w:"ballpark figure", m:"어림잡은 수치", e:"Can you give me a ___ for the total cost?", t:"i"},
+    {w:"bottom line", m:"결론, 핵심 / 순이익", e:"What's the ___? Are we making money?", t:"i"},
+    {w:"let's get the ball rolling", m:"시작합시다", e:"We have a lot to cover — ___.", t:"i"},
+    {w:"in black and white", m:"서면으로, 명확하게", e:"I need everything ___ before we sign.", t:"i"},
+    {w:"blow a deal", m:"거래를 날려버리다", e:"His rudeness ___d the entire contract.", t:"i"},
+    {w:"think outside the box", m:"창의적으로 생각하다", e:"We need to ___ to find a fresh solution.", t:"i"},
+  ]},
+  { book:2, topic:"여행 · Travel", type:"단어·숙어", words:[
+    {w:"direct flight", m:"직항", e:"There's a ___ from Busan to Tokyo.", t:"v"},
+    {w:"connecting flight", m:"경유 항공편", e:"My ___ was delayed for three hours in Singapore.", t:"v"},
+    {w:"package tour", m:"패키지 여행", e:"We booked a ___ to Vietnam — everything included.", t:"v"},
+    {w:"all inclusive", m:"모두 포함된", e:"The resort was ___ — food, drinks, everything.", t:"v"},
+    {w:"complimentary", m:"무료의, 서비스로 제공되는", e:"Breakfast is ___ for all guests.", t:"v"},
+    {w:"unlimited mileage", m:"무제한 운행 거리", e:"The rental car came with ___ — very convenient.", t:"v"},
+    {w:"declare", m:"세관 신고하다", e:"Do I need to ___ this bottle of wine?", t:"v"},
+    {w:"depart", m:"출발하다", e:"Our flight ___s at 6:30 AM.", t:"v"},
+    {w:"excursion", m:"당일 여행, 소풍", e:"We took a boat ___ to the nearby islands.", t:"v"},
+    {w:"return ticket", m:"왕복표", e:"Is a ___ cheaper than two one-way tickets?", t:"v"},
+    {w:"make a reservation", m:"예약하다", e:"I need to ___ at the restaurant for Saturday.", t:"v"},
+    {w:"hit the road", m:"출발하다!", e:"Let's ___ early to beat the rush hour.", t:"i"},
+    {w:"in the driver's seat", m:"결정권자 위치에 있다", e:"As project leader, she's ___ now.", t:"i"},
+    {w:"on the right track", m:"잘 진행되고 있다", e:"Your business plan is ___.", t:"i"},
+    {w:"travel light", m:"짐을 가볍게 싸다", e:"I always ___ on short trips.", t:"i"},
+  ]},
+  { book:2, topic:"여행지 · Destinations", type:"단어·숙어", words:[
+    {w:"tourist attractions", m:"관광 명소", e:"What are the main ___ in your city?", t:"v"},
+    {w:"business district", m:"상업·금융 지구", e:"The ___ is congested at 5pm every day.", t:"v"},
+    {w:"dining district", m:"식당가, 먹자골목", e:"Let's go to the ___ for dinner tonight.", t:"v"},
+    {w:"customs", m:"관습, 지역 문화", e:"Learning local ___ helps you connect with people.", t:"v"},
+    {w:"highlight", m:"최고의 부분, 랜드마크", e:"The sunset cruise was the ___ of our trip.", t:"v"},
+    {w:"surroundings", m:"주변 환경", e:"Always be aware of your ___ when traveling alone.", t:"v"},
+    {w:"scenery", m:"풍경, 경관", e:"The ___ along the coast was breathtaking.", t:"v"},
+    {w:"entertainment district", m:"오락 지구", e:"Let's check out the ___ tonight.", t:"v"},
+    {w:"act of God", m:"자연재해 (불가항력)", e:"The insurance didn't cover it — it was an ___.", t:"i"},
+    {w:"bright and early", m:"아주 이른 아침에", e:"We need to leave ___ to catch our flight.", t:"i"},
+    {w:"a full plate", m:"꽉 찬 일정", e:"We have ___ today — no free time at all.", t:"i"},
+    {w:"call it a day", m:"오늘 일정을 마무리하다", e:"It's 9pm — let's ___.", t:"i"},
+    {w:"get a move on", m:"서두르다", e:"___ — the train leaves in ten minutes!", t:"i"},
+    {w:"off track", m:"길을 잃다, 방향이 틀리다", e:"We got ___ and ended up in the wrong neighborhood.", t:"i"},
+    {w:"watch your back", m:"조심하다", e:"___ in that neighborhood at night.", t:"i"},
+  ]},
+  { book:2, topic:"미디어 · Media & News", type:"단어·숙어", words:[
+    {w:"journalist", m:"언론인", e:"She works as an investigative ___ for a major outlet.", t:"v"},
+    {w:"headline", m:"기사 제목, 헤드라인", e:"Did you see the ___ about the election?", t:"v"},
+    {w:"bias", m:"편향, 선입견", e:"Every news source has some ___ — be critical.", t:"v"},
+    {w:"credible", m:"믿을 수 있는", e:"Always check that your sources are ___.", t:"v"},
+    {w:"editorial", m:"사설, 논설", e:"The newspaper's ___ criticized the new policy.", t:"v"},
+    {w:"front page", m:"1면 (매우 중요한 기사)", e:"The scandal made the ___ of every paper.", t:"v"},
+    {w:"investigate", m:"조사하다", e:"The reporter ___d the company for months.", t:"v"},
+    {w:"broadcast", m:"방송 (하다)", e:"The event will be ___ live tonight.", t:"v"},
+    {w:"column", m:"시사 평론 칼럼", e:"She writes a weekly ___ about politics.", t:"v"},
+    {w:"subjective", m:"주관적인", e:"Opinions are ___ — everyone has a different view.", t:"v"},
+    {w:"it went viral", m:"바이럴되다, 급속히 퍼지다", e:"Her video ___ overnight — 10 million views.", t:"i"},
+    {w:"turn a blind eye", m:"못 본 척하다", e:"Management ___ to the safety violations.", t:"i"},
+    {w:"pull the wool over someone's eyes", m:"속이다", e:"Don't try to ___ — I know the truth.", t:"i"},
+    {w:"both sides of the coin", m:"양면을 다 보다", e:"A good journalist always looks at ___.", t:"i"},
+    {w:"raise the curtain", m:"공개하다, 발표하다", e:"The press conference will ___ on their new strategy.", t:"i"},
+  ]},
+  { book:2, topic:"축제 · Festivals (2권)", type:"단어·숙어", words:[
+    {w:"procession", m:"행진, 행렬", e:"A colorful ___ marched through the old town.", t:"v"},
+    {w:"dazzling", m:"눈부신, 현혹적인", e:"The fireworks were absolutely ___.", t:"v"},
+    {w:"breathtaking", m:"숨이 턱 막히게 아름다운", e:"The view from the top of the castle was ___.", t:"v"},
+    {w:"beverage", m:"음료 전반", e:"What ___ would you like with your meal?", t:"v"},
+    {w:"carnival", m:"카니발, 이동 행사장", e:"We rode the Ferris wheel at the ___.", t:"v"},
+    {w:"stall", m:"가판대, 부스", e:"Every ___ sold different traditional food.", t:"v"},
+    {w:"host", m:"주최자, 주최하다", e:"Korea ___ the World Cup in 2002.", t:"v"},
+    {w:"clown", m:"광대", e:"The ___ made all the children laugh.", t:"v"},
+    {w:"impressive", m:"인상 깊은", e:"The opening ceremony was really ___.", t:"v"},
+    {w:"colorful", m:"색이 다채로운", e:"The parade was loud, festive, and ___.", t:"v"},
+    {w:"barrel of laughs", m:"매우 재미있는 사람", e:"Mark is a ___ — invite him!", t:"i"},
+    {w:"in one's element", m:"자신의 분야에서 최고로 빛나다", e:"She's in her ___ when she's performing on stage.", t:"i"},
+    {w:"chill out", m:"쉬다, 진정하다", e:"Let's ___ by the beach this afternoon.", t:"i"},
+    {w:"with bells on", m:"매우 기꺼이, 신나서", e:"Count me in — I'll be there ___!", t:"i"},
+    {w:"feast your eyes on", m:"눈이 즐거운 것을 보다", e:"Just ___ this view — isn't it magnificent?", t:"i"},
+  ]},
+  { book:2, topic:"상상력 · Imagination", type:"단어·숙어", words:[
+    {w:"intuition", m:"직관", e:"Trust your ___ — it's usually right.", t:"v"},
+    {w:"vivid", m:"생생한, 선명한", e:"I had a very ___ dream about flying.", t:"v"},
+    {w:"thought-provoking", m:"생각을 자극하는", e:"That documentary was really ___.", t:"v"},
+    {w:"hypothesis", m:"가설", e:"Let's test that ___ with a real experiment.", t:"v"},
+    {w:"introspection", m:"내성, 자기성찰", e:"Regular ___ helps you understand your own motivations.", t:"v"},
+    {w:"daydreamer", m:"몽상가", e:"He's always been a ___, full of wild ideas.", t:"v"},
+    {w:"perception", m:"지각, 인식", e:"Our ___ of time changes as we get older.", t:"v"},
+    {w:"bizarre", m:"기묘한, 기괴한", e:"It was a ___ situation — nobody knew what to do.", t:"v"},
+    {w:"eccentric", m:"기이한, 특이한", e:"He's a bit ___, but very creative.", t:"v"},
+    {w:"pursue", m:"추구하다", e:"She decided to ___ her dream of becoming a singer.", t:"v"},
+    {w:"fulfill", m:"성취하다, 이루다", e:"It took ten years, but she finally ___ her goal.", t:"v"},
+    {w:"retrospection", m:"회고, 과거 되돌아보기", e:"In ___, I should have studied harder.", t:"v"},
+    {w:"lucid dream", m:"자각몽", e:"I've been trying to have a ___ through meditation.", t:"i"},
+    {w:"broken dreams", m:"이룰 수 없는 목표", e:"The song is about picking yourself up after ___.", t:"i"},
+    {w:"catch someone's imagination", m:"상상력을 사로잡다", e:"The science project really ___ the children's ___.", t:"i"},
+  ]},
+
+  { book:3, topic:"이정표 언어 [1]", type:"표현·연결어", words:[
+    {w:"Well,", m:"저, 음, 그러니까 (대화 시작·멈춤)", e:"___ I got a message from my friend yesterday.", t:"p"},
+    {w:"In my view,", m:"제 견해로는", e:"___ the project needs more time.", t:"p"},
+    {w:"It seems to me that", m:"제 보기엔 ~인 것 같습니다", e:"___ prices have gone up a lot recently.", t:"p"},
+    {w:"I say this because", m:"이렇게 말하는 이유는", e:"___ the results were much lower last year.", t:"p"},
+    {w:"Here's why.", m:"그 이유는 이렇습니다", e:"___ The plan will save us both time and money.", t:"p"},
+    {w:"In fact,", m:"사실 (강조)", e:"___ I've been to Jeju Island five times.", t:"p"},
+    {w:"You know,", m:"아시겠지만 (공감 유도)", e:"___ it's really hard to stay motivated.", t:"p"},
+    {w:"For example,", m:"예를 들어", e:"___ we could try meeting on Tuesday morning.", t:"p"},
+    {w:"For instance,", m:"예를 들어 (For example와 같은 뜻)", e:"___ our team launched a new product last month.", t:"p"},
+    {w:"Also,", m:"게다가, ~도 또한", e:"___ you might want to bring an umbrella.", t:"p"},
+    {w:"In addition,", m:"게다가 (더욱 격식체)", e:"___ there is a free shuttle bus to the venue.", t:"p"},
+    {w:"First of all,", m:"첫째로", e:"___ I'd like to thank everyone for coming.", t:"p"},
+    {w:"And then,", m:"그러고 나서", e:"___ we went to the museum and had dinner.", t:"p"},
+    {w:"After that,", m:"그 이후에", e:"___ we returned to the hotel and rested.", t:"p"},
+    {w:"Finally,", m:"마지막으로", e:"___ we watched the fireworks from the rooftop.", t:"p"},
+    {w:"As a result,", m:"결과적으로", e:"___ we had to cancel the outdoor event.", t:"p"},
+    {w:"Consequently,", m:"결론적으로 (결과·영향 강조)", e:"___ the team had to work over the weekend.", t:"p"},
+    {w:"Previously,", m:"이전에, 미리", e:"___ we discussed the timeline for the project.", t:"p"},
+    {w:"Earlier,", m:"앞서, 예상보다 일찍", e:"___ you mentioned you had a question about pricing.", t:"p"},
+  ]},
+  { book:3, topic:"이정표 언어 [2]", type:"표현·연결어", words:[
+    {w:"Compared with X,", m:"X에 비해", e:"___ public schools, private schools offer smaller classes.", t:"p"},
+    {w:"In contrast,", m:"대조적으로", e:"___ our competitors are cutting their budget.", t:"p"},
+    {w:"Clearly,", m:"분명하게", e:"___ something needs to change.", t:"p"},
+    {w:"Certainly,", m:"틀림없이, 물론", e:"___ I agree with your point.", t:"p"},
+    {w:"In brief,", m:"요약하면", e:"___ the project was a success.", t:"p"},
+    {w:"In a nutshell,", m:"한마디로 말해서", e:"___ exercise and diet are the keys to good health.", t:"p"},
+    {w:"As I mentioned earlier,", m:"앞서 말했듯이", e:"___ I'll be away in May.", t:"p"},
+    {w:"As noted before,", m:"앞서 언급했듯이", e:"___ several customers have complained.", t:"p"},
+    {w:"Surprisingly,", m:"놀랍게도", e:"___ the flight arrived 20 minutes early.", t:"p"},
+    {w:"Sadly,", m:"슬프게도", e:"___ no one came to the opening night.", t:"p"},
+    {w:"Fortunately,", m:"다행스럽게도", e:"___ nobody was hurt in the accident.", t:"p"},
+    {w:"Interestingly,", m:"흥미롭게도", e:"___ people in their 40s use social media the most.", t:"p"},
+    {w:"Luckily,", m:"운 좋게도", e:"___ I found my phone under the seat.", t:"p"},
+    {w:"Unfortunately,", m:"불행하게도", e:"___ the show was cancelled due to rain.", t:"p"},
+    {w:"Frankly,", m:"솔직히", e:"___ I think the plan needs more work.", t:"p"},
+    {w:"Amazingly,", m:"놀랍게도 (긍정적 놀라움)", e:"___ they agreed to all of our requests.", t:"p"},
+    {w:"To sum up,", m:"요약하자면", e:"___ the results were better than expected.", t:"p"},
+    {w:"In conclusion,", m:"결론적으로", e:"___ we recommend adopting the new system.", t:"p"},
+  ]},
+  { book:3, topic:"관계 · Relationships (3권)", type:"단어·표현", words:[
+    {w:"blind date", m:"소개팅", e:"Have you ever been on a ___?", t:"v"},
+    {w:"love at first sight", m:"첫눈에 반하다", e:"Do you believe in ___?", t:"p"},
+    {w:"ideal type", m:"이상형", e:"What is your ___ in a partner?", t:"v"},
+    {w:"pickup line", m:"작업 멘트", e:"Do you have a funny ___ you've used?", t:"v"},
+    {w:"wedding ceremony", m:"결혼식", e:"Tell me about a traditional Korean ___.", t:"v"},
+    {w:"best friend", m:"절친, 가장 친한 친구", e:"How did you first meet your ___?", t:"v"},
+    {w:"worst friend", m:"최악의 친구 (경험)", e:"Do you have a ___ story to share?", t:"v"},
+    {w:"traditional values", m:"전통적 가치관", e:"Do you think ___ are still important today?", t:"v"},
+    {w:"long-distance relationship", m:"장거리 연애", e:"Have you ever been in a ___?", t:"v"},
+    {w:"trust", m:"신뢰", e:"___ is the foundation of any good relationship.", t:"v"},
+  ]},
+  { book:3, topic:"대학 · College Life", type:"단어·표현", words:[
+    {w:"tuition fee", m:"수업료, 등록금", e:"The ___ at that university is very high.", t:"v"},
+    {w:"scholarship", m:"장학금", e:"She got a full ___ for her graduate studies.", t:"v"},
+    {w:"major", m:"전공", e:"What was your ___ in university?", t:"v"},
+    {w:"campus life", m:"대학 생활", e:"___ in Korea is very different from abroad.", t:"v"},
+    {w:"internship", m:"인턴십", e:"I did an ___ at a broadcasting company.", t:"v"},
+    {w:"college romance", m:"대학 시절 연애", e:"Did you have any ___s to share?", t:"v"},
+    {w:"fondest memory", m:"가장 소중한 기억", e:"What is your ___ of university?", t:"v"},
+    {w:"dormitory", m:"기숙사", e:"I lived in the ___ for my first year.", t:"v"},
+    {w:"extracurricular activities", m:"과외 활동", e:"___ are just as important as grades.", t:"v"},
+    {w:"graduation ceremony", m:"졸업식", e:"My parents flew in for my ___.", t:"v"},
+  ]},
+  { book:3, topic:"외모 · Beauty & Appearance", type:"단어·표현", words:[
+    {w:"first impression", m:"첫인상", e:"What was your ___ of me when we first met?", t:"v"},
+    {w:"attractive", m:"매력적인", e:"She has an ___ personality as well as looks.", t:"v"},
+    {w:"cosmetic surgery", m:"성형수술", e:"___ is very common in parts of Korea.", t:"v"},
+    {w:"plastic surgery", m:"성형수술", e:"Have ___ trends changed over the years?", t:"v"},
+    {w:"self-confidence", m:"자신감", e:"She radiates ___ wherever she goes.", t:"v"},
+    {w:"grooming", m:"몸단장, 외모 관리", e:"Good ___ matters in a professional setting.", t:"v"},
+    {w:"beauty standard", m:"미의 기준", e:"___ vary widely across different cultures.", t:"v"},
+    {w:"inner beauty", m:"내면의 아름다움", e:"___ matters far more than appearance.", t:"v"},
+    {w:"perception of beauty", m:"아름다움에 대한 인식", e:"Is ___ shaped more by culture or nature?", t:"v"},
+    {w:"related to success", m:"성공과 연관되어 있는", e:"Do you think physical appearance is ___ ___?", t:"v"},
+  ]},
+  { book:3, topic:"자동차 · Cars & Driving", type:"단어·숙어", words:[
+    {w:"road rage", m:"난폭 운전 (분노 운전)", e:"___ is becoming more common on city roads.", t:"v"},
+    {w:"traffic jam", m:"교통 체증", e:"I was stuck in a ___ for two hours this morning.", t:"v"},
+    {w:"designated driver", m:"지정 운전자", e:"Can you be the ___ tonight?", t:"v"},
+    {w:"drunk driving", m:"음주 운전", e:"___ is a serious crime.", t:"v"},
+    {w:"speeding ticket", m:"과속 딱지", e:"I got a ___ last week.", t:"v"},
+    {w:"roundabout", m:"회전 교차로", e:"Turn left at the ___.", t:"v"},
+    {w:"parallel parking", m:"평행 주차", e:"___ in tight spaces is really stressful.", t:"v"},
+    {w:"fuel efficiency", m:"연비", e:"This car has excellent ___.", t:"v"},
+    {w:"electric vehicle", m:"전기차", e:"More people are switching to ___s.", t:"v"},
+    {w:"backseat driver", m:"뒤에서 잔소리하는 사람", e:"Stop being a ___ — I know what I'm doing!", t:"i"},
+    {w:"hit the road", m:"출발하다", e:"Let's ___ before the traffic gets bad.", t:"i"},
+    {w:"in the driver's seat", m:"주도권을 가지고 있다", e:"In this negotiation, we're ___.", t:"i"},
+    {w:"road rage", m:"난폭 운전 행동", e:"___ can lead to serious accidents.", t:"v"},
+  ]},
+  { book:3, topic:"쇼핑 · Shopping (3권)", type:"단어·숙어", words:[
+    {w:"window shopping", m:"아이쇼핑", e:"I'm just doing ___ — not buying anything today.", t:"v"},
+    {w:"bargain", m:"싸게 산 물건 / 흥정하다", e:"I got a great ___ at the flea market.", t:"v"},
+    {w:"second-hand", m:"중고의", e:"I bought a ___ guitar in great condition.", t:"v"},
+    {w:"brand name", m:"브랜드명, 명품", e:"Do you prefer ___ items or cheaper alternatives?", t:"v"},
+    {w:"online shopping", m:"온라인 쇼핑", e:"___ is much more convenient than going to stores.", t:"v"},
+    {w:"return policy", m:"환불 정책", e:"Always check the ___ before you buy.", t:"v"},
+    {w:"discount voucher", m:"할인 쿠폰", e:"I used a ___ and saved 20%.", t:"v"},
+    {w:"fitting room", m:"탈의실", e:"Can I use the ___ to try this on?", t:"v"},
+    {w:"on a tight budget", m:"예산이 빡빡한", e:"I'm ___ this month, so no big purchases.", t:"i"},
+    {w:"treat yourself", m:"자신에게 선물하다", e:"You deserve it — go ahead and ___!", t:"i"},
+  ]},
+];
+
+let mode = 'flash';
+let selectedTopics = new Set();
+let studyCards = [];
+let currentIdx = 0;
+let correctCount = 0;
+let wrongIndices = [];
+let answered = false;
+let isReviewMode = false;
+
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function renderTopicList() {
+  const container = document.getElementById('topic-list');
+  container.innerHTML = '';
+  [1, 2, 3].forEach(bookNum => {
+    const group = document.createElement('div');
+    group.className = 'book-group';
+    group.innerHTML = `<div class="book-header">${bookNum}권</div>`;
+    const grid = document.createElement('div');
+    grid.className = 'topic-grid';
+    VOCAB.forEach((t, i) => {
+      if (t.book !== bookNum) return;
+      const card = document.createElement('div');
+      card.className = 'topic-card' + (selectedTopics.has(i) ? ' selected' : '');
+      card.innerHTML = `<div class="tc-type">${t.type}</div><div class="tc-name">${t.topic}</div><div class="tc-count">${t.words.length}개</div>`;
+      card.onclick = () => toggleTopic(i, card);
+      grid.appendChild(card);
+    });
+    group.appendChild(grid);
+    container.appendChild(group);
+  });
+  updateInfo();
+}
+
+function toggleTopic(i, el) {
+  if (selectedTopics.has(i)) { selectedTopics.delete(i); el.classList.remove('selected'); }
+  else { selectedTopics.add(i); el.classList.add('selected'); }
+  updateInfo();
+}
+
+function selectAll() {
+  VOCAB.forEach((_, i) => selectedTopics.add(i));
+  renderTopicList();
+}
+function selectNone() {
+  selectedTopics.clear();
+  renderTopicList();
+}
+function selectBook(n) {
+  selectedTopics.clear();
+  VOCAB.forEach((t, i) => { if (t.book === n) selectedTopics.add(i); });
+  renderTopicList();
+}
+
+function updateInfo() {
+  const total = [...selectedTopics].reduce((s, i) => s + VOCAB[i].words.length, 0);
+  const el = document.getElementById('selected-info');
+  if (selectedTopics.size === 0) el.innerHTML = '토픽을 선택하세요';
+  else el.innerHTML = `<strong>${selectedTopics.size}</strong>개 토픽 · <strong>${total}</strong>개 단어`;
+}
+
+function startStudy(reviewOnly) {
+  isReviewMode = reviewOnly;
+  if (reviewOnly) {
+    studyCards = wrongIndices.map(i => studyCards[i]);
+    wrongIndices = [];
+  } else {
+    if (selectedTopics.size === 0) { alert('토픽을 하나 이상 선택하세요!'); return; }
+    studyCards = [];
+    selectedTopics.forEach(i => {
+      VOCAB[i].words.forEach(w => studyCards.push({ ...w, topicLabel: VOCAB[i].topic, bookLabel: VOCAB[i].book }));
+    });
+    studyCards = studyCards.sort(() => Math.random() - 0.5);
+    wrongIndices = [];
+  }
+  currentIdx = 0; correctCount = 0; answered = false;
+  document.getElementById('home-view').style.display = 'none';
+  document.getElementById('result-view').style.display = 'none';
+  document.getElementById('study-view').style.display = 'block';
+  document.getElementById('review-banner').style.display = isReviewMode ? 'flex' : 'none';
+  renderCard();
+}
+
+function renderCard() {
+  if (currentIdx >= studyCards.length) { showResult(); return; }
+  const card = studyCards[currentIdx];
+  const pct = Math.round((currentIdx / studyCards.length) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = (currentIdx + 1) + ' / ' + studyCards.length;
+  document.getElementById('score-pill').textContent = '맞음 ' + correctCount;
+  document.getElementById('wrong-pill').textContent = '틀림 ' + wrongIndices.length;
+  answered = false;
+  if (mode === 'flash') renderFlashCard(card);
+  else renderBlankCard(card);
+}
+
+function typeLabel(t) {
+  return t === 'i' ? '숙어' : t === 'p' ? '표현' : '단어';
+}
+
+function renderFlashCard(card) {
+  const area = document.getElementById('card-area');
+  const exDisplay = card.e.replace(/___/g, '<span class="blank">______</span>');
+  area.innerHTML = `
+    <div class="flashcard" id="fc" onclick="flipCard()">
+      <div class="fc-book-tag">${card.bookLabel}권</div>
+      <div class="fc-type-tag">${typeLabel(card.t)}</div>
+      <div class="fc-front">
+        <div class="fc-front-word">${card.w}</div>
+        <div class="fc-front-hint">${card.topicLabel}</div>
+        <div class="fc-tap-hint">탭해서 뜻 확인 →</div>
+      </div>
+      <div class="fc-back">
+        <div class="fc-back-meaning">${card.m}</div>
+        <div class="fc-back-example">${exDisplay}</div>
+      </div>
+      <div class="fc-topic-tag">${card.topicLabel}</div>
+    </div>`;
+  document.getElementById('btn-row').innerHTML = `
+    <button class="btn ghost" onclick="goBack()" ${currentIdx === 0 ? 'disabled style="opacity:0.35"' : ''}>
+      <svg viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      이전
+    </button>
+    <button class="btn danger" onclick="markCard(false)">모름</button>
+    <button class="btn ghost" onclick="flipCard()">뒤집기</button>
+    <button class="btn success" onclick="markCard(true)">알아요!</button>`;
+}
+
+function flipCard() {
+  const fc = document.getElementById('fc');
+  if (!fc) return;
+  fc.classList.toggle('flipped');
+}
+
+function markCard(knew) {
+  if (knew) correctCount++;
+  else wrongIndices.push(currentIdx);
+  currentIdx++;
+  renderCard();
+}
+
+function goBack() {
+  if (currentIdx === 0) return;
+  currentIdx--;
+  renderCard();
+}
+
+function renderBlankCard(card) {
+  const area = document.getElementById('card-area');
+  const allWords = studyCards.map(c => c.w);
+  const pool = allWords.filter(w => w !== card.w);
+  const distractors = pool.sort(() => Math.random() - 0.5).slice(0, 3);
+  const choices = [...distractors, card.w].sort(() => Math.random() - 0.5);
+  const exDisplay = card.e.replace(/___/g, `<span class="bc-blank">________</span>`);
+  const btnHtml = choices.map(c =>
+    `<button class="choice-btn" onclick="checkAnswer(this,'${c.replace(/'/g,"&#39;").replace(/"/g,"&quot;")}')">${c}</button>`
+  ).join('');
+  area.innerHTML = `
+    <div class="blank-card">
+      <div class="bc-meta">${card.bookLabel}권 · ${card.topicLabel} · ${typeLabel(card.t)}</div>
+      <div class="bc-meaning">뜻: <strong>${card.m}</strong></div>
+      <div class="bc-sentence">${exDisplay}</div>
+      <div class="choices">${btnHtml}</div>
+      <div class="result-msg" id="result-msg"></div>
+    </div>`;
+  document.getElementById('btn-row').innerHTML = `
+    <button class="btn ghost" onclick="goBack()" ${currentIdx === 0 ? 'disabled style="opacity:0.35"' : ''}>
+      <svg viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      이전
+    </button>
+    <button class="btn ghost" onclick="skipCard()">건너뛰기</button>`;
+}
+
+function checkAnswer(btn, choice) {
+  if (answered) return;
+  answered = true;
+  const card = studyCards[currentIdx];
+  const isCorrect = (choice === card.w);
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  document.querySelectorAll('.choice-btn').forEach(b => b.classList.add('disabled'));
+  const msg = document.getElementById('result-msg');
+  if (isCorrect) {
+    correctCount++;
+    msg.textContent = '정답! 잘했어요 +1점';
+    msg.className = 'result-msg ok';
+    setTimeout(() => { currentIdx++; renderCard(); }, 950);
+  } else {
+    wrongIndices.push(currentIdx);
+    msg.textContent = '틀렸어요. 정답: ' + card.w;
+    msg.className = 'result-msg ng';
+    document.querySelectorAll('.choice-btn').forEach(b => { if (b.textContent === card.w) b.classList.add('correct'); });
+    document.getElementById('btn-row').innerHTML = `
+      <button class="btn ghost" onclick="goBack()">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        이전
+      </button>
+      <button class="btn primary" onclick="nextCard()">다음 →</button>`;
+  }
+}
+
+function skipCard() { wrongIndices.push(currentIdx); currentIdx++; renderCard(); }
+function nextCard() { currentIdx++; renderCard(); }
+
+function showResult() {
+  document.getElementById('study-view').style.display = 'none';
+  const rv = document.getElementById('result-view');
+  rv.style.display = 'block';
+  const total = studyCards.length;
+  const pct = Math.round((correctCount / total) * 100);
+  let emoji = pct >= 90 ? '🏆' : pct >= 70 ? '👍' : pct >= 50 ? '📖' : '💪';
+  let msg = pct >= 90 ? '완벽해요! 이 토픽은 마스터!' : pct >= 70 ? '잘하셨어요! 조금만 더 연습하면 완벽해요.' : pct >= 50 ? '절반 이상 맞혔어요! 다시 한 번 도전해봐요.' : '틈틈이 복습이 필요해요. 다시 도전!';
+  const reviewBtn = wrongIndices.length > 0
+    ? `<button class="btn danger" onclick="startStudy(true)">틀린 ${wrongIndices.length}개 다시 보기</button>`
+    : '';
+  rv.innerHTML = `
+    <div class="result-card">
+      <div class="result-score">${correctCount} / ${total}</div>
+      <div class="result-pct">${pct}% 정답률</div>
+      <div class="result-msg-big">${emoji} ${msg}</div>
+      <div class="result-stats">
+        <div class="stat-box"><div class="stat-num green">${correctCount}</div><div class="stat-label">정답</div></div>
+        <div class="stat-box"><div class="stat-num red">${wrongIndices.length}</div><div class="stat-label">오답</div></div>
+        <div class="stat-box"><div class="stat-num">${total}</div><div class="stat-label">전체</div></div>
+      </div>
+      <div class="result-btns">
+        <button class="btn ghost" onclick="backToHome()">토픽 선택</button>
+        <button class="btn" onclick="startStudy(false)">다시 학습</button>
+        ${reviewBtn}
+      </div>
+    </div>`;
+}
+
+function backToHome() {
+  document.getElementById('result-view').style.display = 'none';
+  document.getElementById('home-view').style.display = 'block';
+}
+
+renderTopicList();
+</script>
+</body>
+</html>
